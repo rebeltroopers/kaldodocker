@@ -3,7 +3,9 @@ A CPU docker file with lammps and kaldo
 
 
 This will be a docker container that will install lammps with python support then install KALDo.
+for CPU build do below.
 
+mv Dockerfile-cpu Dockerfile
 
 BUILD
 docker build -t kaldo .
