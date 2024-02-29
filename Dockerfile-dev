@@ -42,7 +42,7 @@ RUN git clone https://github.com/lammps/lammps.git lammps && \
         -DPYTHON_EXECUTABLE:FILEPATH=$(which python3) && \
     make -j $(nproc) && \
     make install-python
-#Git kaldo
+#Git kaldo so tests can be done
 RUN git-lfs clone https://github.com/nanotheorygroup/kaldo
 
 # Set the working directory back to the root
