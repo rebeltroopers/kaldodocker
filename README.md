@@ -1,51 +1,78 @@
 # KALDodocker
-A CPU docker file with lammps and kaldo
 
+## Overview
+KALDodocker is a Docker container designed for computational simulations, integrating LAMMPS with Python support and KALDo software. This container is tailored for CPU environments but also includes instructions for adapting it for GPU usage.
 
-This will be a docker container that will install lammps with python support then install KALDo.
-for CPU build do below.
+## Getting Started
 
+### CPU Build
+
+To prepare the Docker environment for CPU-based computations, rename the Dockerfile designated for CPU usage:
+
+```bash
 mv Dockerfile-cpu Dockerfile
+```
 
-BUILD
+#### Building the Container
+
+Build the Docker image using the following command:
+
+```bash
 docker build -t kaldo .
+```
 
-RUN
-docker run -it --rm  -u $(id -u):$(id -g) kaldo /bin/bash
+#### Running the Container
 
+To run KALDo in an interactive shell environment, execute:
 
-The above command will run KALDo in an interactive shell. You will have a full Ubuntu env to work with.
-to mount your current directory so that you can transfer files from Docker container to your actual computer you may want to add the -v command
-i.e.
+```bash
+docker run -it --rm -u $(id -u):$(id -g) kaldo /bin/bash
+```
 
-docker run -it --rm  -u $(id -u):$(id -g) -v $(pwd):/root/ kaldo /bin/bash
+This command grants you access to a full Ubuntu environment within the container.
 
-This will mount your pwd to /root in the docker container and will be the default.
+##### File Transfer Support
 
+To mount your current directory inside the container for easy file transfer, use the `-v` option:
 
+```bash
+docker run -it --rm -u $(id -u):$(id -g) -v $(pwd):/root/ kaldo /bin/bash
+```
 
-Dockerfile-GPU
-This will allow for GPU support. It is up to you to install and get nvidia-cuda-tookit working.
+This mounts your present working directory to `/root` inside the Docker container.
 
+### GPU Build
 
-mv DOckerfile-gpu Dockerfile
+For enabling GPU support, follow these instructions but ensure you have `nvidia-cuda-toolkit` and compatible drivers installed.
 
-BUILD
+#### Preparing the Dockerfile
 
+Switch to the Dockerfile intended for GPU use:
+
+```bash
+mv Dockerfile-gpu Dockerfile
+```
+
+#### Building the Container
+
+To build the GPU-enabled Docker image, use:
+
+```bash
 docker build -t kaldo-gpu .
+```
 
-RUN
+#### Running the Container
 
-docker run -it --rm  -u $(id -u):$(id -g)  --gpus all kaldo /bin/bash
+To run the container with GPU support:
 
-the --gpus will run all availiable gpus.
-You can specifiy how many gpus with --gpus=0,1 to use gpu 0 and gpu 1.
-These gpus with the docker container and may not be what you use.
+```bash
+docker run -it --rm -u $(id -u):$(id -g) --gpus all kaldo-gpu /bin/bash
+```
 
-Full understanding of how docker gpua nd installiation can be found at https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
-https://www.tensorflow.org/install/docker
+The `--gpus all` flag enables all available GPUs. For specific GPUs, use `--gpus=0,1` to utilize GPU 0 and GPU 1, for example.
 
+### Additional Information
 
-
-The devel will also install all of kaldo and keep it. This is mostly for debugging or if you need the whole package.
+- For comprehensive details on Docker and GPU support, refer to the [NVIDIA Container Toolkit documentation](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) and [TensorFlow Docker installation guide](https://www.tensorflow.org/install/docker).
+- The development version (`devel`) includes the entire KALDo package and is intended for debugging or when full access to KALDo is necessary.
 
