@@ -1,5 +1,5 @@
 # Use Ubuntu 22.04 as the base image
-FROM ubuntu:22.04
+FROM ghcr.io/deepmodeling/deepmd-kit:devel_cu11
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
@@ -27,7 +27,7 @@ COPY requirements.txt /mnt/work/
 RUN python3 -m pip install --no-cache-dir git+https://github.com/nanotheorygroup/kaldo && \
     python3 -m pip install --no-cache-dir -r requirements.txt
 
-# Clone, build, and install LAMMPS
+#Install lammps with packages and GPU config.
 RUN git clone https://github.com/lammps/lammps.git lammps && \
     cd lammps && \
     mkdir build && \
@@ -39,9 +39,14 @@ RUN git clone https://github.com/lammps/lammps.git lammps && \
         -DPKG_MANYBODY=yes \
         -DPKG_KSPACE=yes \
         -DPKG_PHONON=yes \
+	-DPKG_ML-SNAP=yes \
+        -DPKG_ML-IAP=yes \
+        -DPKG_ML-PACE=yes \
+        -DPKG_SPIN=yes \
         -DPYTHON_EXECUTABLE:FILEPATH=$(which python3) && \
-    make -j $(nproc) && \
-    make install-python
+     make -j $(nproc)
+
+
 #Git kaldo so tests can be done
 RUN git-lfs clone https://github.com/nanotheorygroup/kaldo
 
